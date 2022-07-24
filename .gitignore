@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Node modules
+/angularclient/node_modules
+
+# Target dir
+/target/
