@@ -1,9 +1,6 @@
 package com.example.JustWork.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,9 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@NamedEntityGraph(name = "day-exercise-graph",
-        attributeNodes = @NamedAttributeNode("exercises")
-)
 @Table(name = "day")
 public class Day {
 

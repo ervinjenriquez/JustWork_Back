@@ -37,7 +37,10 @@ public class ExerciseController {
     }
 
     @PostMapping("/exercises/{id}")
+    @Transactional
     public ResponseEntity<Exercise> addExercise(@PathVariable("id") Long id, @RequestBody Exercise exercise) {
+        Optional<Day> foundList = dayService.getDayById(id);
+        foundList.get().addExercise(exercise);
         exerciseService.saveExercise(exercise);
         return new ResponseEntity<Exercise>(exercise, HttpStatus.CREATED);
     }
@@ -47,10 +50,18 @@ public class ExerciseController {
     public void deleteExercise(@PathVariable("id") Long id) {exerciseService.deleteExercise(id);}
 
     @PutMapping("/exercises/{id}")
-    public ResponseEntity<Exercise> editExercise(@PathVariable("id") Long id, @RequestBody Exercise exercise) {
-        Boolean successfulUpdate = exerciseService.updateExercise(id, exercise);
-        HttpStatus status = successfulUpdate ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-        return new ResponseEntity<Exercise>(exercise, status);
+    public ResponseEntity<Exercise> editExercise(@PathVariable("id") Long id, @RequestBody Exercise updateRequest) {
+        Optional<Exercise> foundExercise = exerciseService.getExerciseById(id);
+
+        if (foundExercise.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Exercise updatedExercise = foundExercise.get();
+        updatedExercise.setTitle(updateRequest.getTitle());
+        exerciseService.saveExercise(updatedExercise);
+
+        return new ResponseEntity<Exercise>(updatedExercise, HttpStatus.OK);
     }
 
 }

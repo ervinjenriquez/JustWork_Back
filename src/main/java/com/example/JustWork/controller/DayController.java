@@ -44,18 +44,10 @@ public class DayController {
     public void deleteDay(@PathVariable("id") Long id) { dayService.deleteDay(id);}
 
     @PutMapping("/days/{id}")
-    public ResponseEntity<Day> editDay(@PathVariable("id") Long id, @RequestBody Day updateRequest) {
-        Optional<Day> foundDay = dayService.getDayById(id);
-
-        if (foundDay.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Day updatedDay = foundDay.get();
-        updatedDay.setTitle(updateRequest.getTitle());
-        dayService.saveDay(updatedDay);
-
-        return new ResponseEntity<Day>(updatedDay, HttpStatus.OK);
+    public ResponseEntity<Day> editDay(@PathVariable("id") Long id, @RequestBody Day day) {
+        Boolean successfulUpdate = dayService.updateDay(id, day);
+        HttpStatus status = successfulUpdate ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        return new ResponseEntity<Day>(day, status);
     }
 
 }

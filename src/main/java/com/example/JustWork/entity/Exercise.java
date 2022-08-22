@@ -21,18 +21,15 @@ public class Exercise {
     private String title;
     @OneToMany(
             mappedBy = "exercise",
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            }
+            cascade = CascadeType.ALL
     )
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
+    @JsonManagedReference
     private List<Set> sets = new ArrayList<>();
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     private Day day;
 
     //Constructors
