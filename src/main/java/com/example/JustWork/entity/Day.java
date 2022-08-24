@@ -1,6 +1,8 @@
 package com.example.JustWork.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,10 +21,9 @@ public class Day {
     private String description;
 
     @OneToMany(
-            mappedBy = "day",
+            orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    @JsonManagedReference
     private List<Exercise> exercises = new ArrayList<>();
 
     public Day() {}
@@ -62,7 +63,6 @@ public class Day {
     }
     public void addExercise(Exercise newExercise) {
         exercises.add(newExercise);
-        newExercise.setDay(this);
     }
 
     @Override

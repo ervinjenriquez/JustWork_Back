@@ -2,7 +2,6 @@ package com.example.JustWork.controller;
 
 import com.example.JustWork.entity.Day;
 import com.example.JustWork.entity.Exercise;
-import com.example.JustWork.repository.ExerciseRepository;
 import com.example.JustWork.service.DayService;
 import com.example.JustWork.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class ExerciseController {
     }
 
     @DeleteMapping("/exercises/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteExercise(@PathVariable("id") Long id) {exerciseService.deleteExercise(id);}
 
     @PutMapping("/exercises/{id}")

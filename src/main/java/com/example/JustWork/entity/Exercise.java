@@ -20,17 +20,11 @@ public class Exercise {
     private Long id;
     private String title;
     @OneToMany(
-            mappedBy = "exercise",
+            orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    @JsonManagedReference
     private List<Set> sets = new ArrayList<>();
 
-    @ManyToOne
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    private Day day;
 
     //Constructors
     public Exercise() {}
@@ -41,10 +35,7 @@ public class Exercise {
 
     public List<Set> getSets() {return this.sets;}
     public void setSets(List<Set> set) { this.sets = set; }
-    public void addSet(Set newSet) {
-        sets.add(newSet);
-        newSet.setExercise(this);
-    }
+    public void addSet(Set newSet) { sets.add(newSet); }
 
     public Long getId() {
         return id;
@@ -58,13 +49,6 @@ public class Exercise {
     }
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Day getDay() {
-        return day;
-    }
-    public void setDay(Day day) {
-        this.day = day;
     }
 
     @Override

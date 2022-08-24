@@ -58,7 +58,6 @@ public class SetServiceTest {
     public void shouldUpdateSetIfFound() {
         Set foundSet = new Set(2, 1, 135, 5, 1, "warm-up");
         Set newSet = new Set();
-        newSet.setExercise(new Exercise());
         newSet.setWeek(3);
         newSet.setNumber(2);
         newSet.setWeight(225);

@@ -19,14 +19,7 @@ public class ExerciseService {
 
     public Optional<Exercise> getExerciseById(Long id) { return exerciseRepository.findById(id);}
 
-    public void saveExercise(Exercise exercise) {
-        if (!exercise.getSets().isEmpty()) {
-            for (Set set : exercise.getSets()) {
-                set.setExercise(exercise);
-            }
-        }
-        exerciseRepository.save(exercise);
-    }
+    public void saveExercise(Exercise exercise) { exerciseRepository.save(exercise); }
 
     public void deleteExercise(Long id) { exerciseRepository.deleteById(id); }
 

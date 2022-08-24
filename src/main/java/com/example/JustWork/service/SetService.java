@@ -34,9 +34,6 @@ public class SetService {
 
         Set retrievedSet = foundSet.get();
 
-        if (set.getExercise() != null) {
-            retrievedSet.setExercise(set.getExercise());
-        }
         if (set.getDifficulty() >= 1 && set.getDifficulty() <= 10) {
             retrievedSet.setDifficulty(set.getDifficulty());
         }

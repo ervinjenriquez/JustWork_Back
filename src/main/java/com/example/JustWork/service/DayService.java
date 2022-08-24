@@ -19,14 +19,7 @@ public class DayService {
 
     public Optional<Day> getDayById(Long id) { return dayRepository.findById(id);}
 
-    public void saveDay(Day day) {
-        if (!day.getExercises().isEmpty()) {
-            for (Exercise exercise : day.getExercises()) {
-                exercise.setDay(day);
-            }
-        }
-        dayRepository.save(day);
-    }
+    public void saveDay(Day day) { dayRepository.save(day);}
 
     public void deleteDay(Long id) { dayRepository.deleteById(id);}
 

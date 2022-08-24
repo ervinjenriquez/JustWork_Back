@@ -21,13 +21,8 @@ public class Set {
     private int difficulty;
     private String type;
 
-    @ManyToOne
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    private Exercise exercise;
-
-    public Set() {}
+    public Set() {
+    }
 
     public Set(int week, int number, int weight, int reps, int difficulty, String type) {
         this.type = type;
@@ -40,6 +35,7 @@ public class Set {
     public int getWeek() {
         return week;
     }
+
     public void setWeek(int week) {
         this.week = week;
     }
@@ -47,6 +43,7 @@ public class Set {
     public int getWeight() {
         return weight;
     }
+
     public void setWeight(int weight) {
         this.weight = weight;
     }
@@ -54,6 +51,7 @@ public class Set {
     public int getReps() {
         return reps;
     }
+
     public void setReps(int reps) {
         this.reps = reps;
     }
@@ -61,6 +59,7 @@ public class Set {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -68,6 +67,7 @@ public class Set {
     public int getNumber() {
         return number;
     }
+
     public void setNumber(int number) {
         this.number = number;
     }
@@ -75,6 +75,7 @@ public class Set {
     public int getDifficulty() {
         return difficulty;
     }
+
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
@@ -82,15 +83,9 @@ public class Set {
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Exercise getExercise() {
-        return exercise;
-    }
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
     }
 
     @Override
@@ -98,11 +93,11 @@ public class Set {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Set set = (Set) o;
-        return week == set.week && number == set.number && weight == set.weight && reps == set.reps && difficulty == set.difficulty && Objects.equals(type, set.type) && exercise.equals(set.exercise);
+        return week == set.week && number == set.number && weight == set.weight && reps == set.reps && difficulty == set.difficulty && id.equals(set.id) && Objects.equals(type, set.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(week, number, weight, reps, difficulty, type, exercise);
+        return Objects.hash(id, week, number, weight, reps, difficulty, type);
     }
 }
