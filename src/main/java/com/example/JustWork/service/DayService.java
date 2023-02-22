@@ -18,10 +18,11 @@ public class DayService {
     public List<Day> getDays() { return dayRepository.findAll();}
 
     public Optional<Day> getDayById(Long id) {
-        //If dayRepository.findById(id) returns null or wha then ret
-
-
-        return dayRepository.findById(id);
+        if (id != null) { //If valid input
+            return dayRepository.findById(id);
+        } else { //If not valid input
+            throw new IllegalArgumentException();
+        }
     }
 
     public void saveDay(Day day) { dayRepository.save(day);}

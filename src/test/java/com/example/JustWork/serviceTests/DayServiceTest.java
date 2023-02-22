@@ -52,6 +52,13 @@ public class DayServiceTest {
     }
 
     @Test
+    public void shouldNotGetDayByIdWhenPassedNull() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.getDayById(null);
+        });
+    }
+
+    @Test
     public void shouldSaveDay() {
         Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
         dayService.saveDay(sampleDay);

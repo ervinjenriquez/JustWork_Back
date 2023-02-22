@@ -24,12 +24,16 @@ public class DayController {
 
     @GetMapping("/days/{id}")
     public ResponseEntity<Day> getDayById(@PathVariable("id") Long id) {
-        Optional<Day> foundDay = dayService.getDayById(id);
-        if(foundDay.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            Optional<Day> foundDay = dayService.getDayById(id);
+            if (foundDay.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            Day updatedDay = foundDay.get();
+            return new ResponseEntity<Day>(updatedDay, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Day updatedDay = foundDay.get();
-        return new ResponseEntity<Day>(updatedDay, HttpStatus.OK);
     }
 
     @PostMapping("/days")
