@@ -17,6 +17,9 @@ public class DayService {
 
     public List<Day> getDays() { return dayRepository.findAll();}
 
+    //if id(1) return correct day
+    //if id(2) return 404 (id 2 doesn't exist)
+    //if id(null) return 400
     public Optional<Day> getDayById(Long id) {
         if (id != null) { //If valid input
             return dayRepository.findById(id);

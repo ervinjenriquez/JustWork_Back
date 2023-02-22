@@ -89,4 +89,20 @@ public class DayServiceTest {
         Boolean result = dayService.updateDay(1L, new Day());
         Assertions.assertFalse(result);
     }
+
+
+    //private assertDayEquals
+    //build my own
+
+    //Start with discussion about arch tiers and why they are important
+    //Service tier, middle tier
+
+    //Build this out later
+    private boolean assertDayEquals(Day o1, Day o2) {
+
+        Assertions.assertEquals(o1.getTitle(), o2.getTitle(), "Title matches");
+        Assertions.assertEquals(o1.getDescription(), o2.getDescription(), "Description matches");
+
+        return true;
+    }
 }
