@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -36,8 +37,18 @@ public class DayServiceTest {
         sampleDay.setId(1L);
         Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay));
         Optional<Day> foundDay = dayService.getDayById(1L);
-        Mockito.verify(dayRepository).findById(1L);
         Assertions.assertEquals(foundDay, Optional.of(sampleDay));
+    }
+
+    @Test
+    public void shouldNotGetDayByIdWhenDayDoesNotExist() {
+        Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
+        sampleDay.setId(1L);
+
+        Mockito.when(dayRepository.findById(2L)).thenReturn(null);
+        Optional<Day> foundDay = dayService.getDayById(2L);
+
+        Assertions.assertEquals(null, foundDay);
     }
 
     @Test

@@ -10,4 +10,5 @@ import java.util.List;
 public interface DayRepository extends JpaRepository<Day, Long> {
 
     List<Day> findAll();
+
 }

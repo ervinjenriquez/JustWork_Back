@@ -17,7 +17,12 @@ public class DayService {
 
     public List<Day> getDays() { return dayRepository.findAll();}
 
-    public Optional<Day> getDayById(Long id) { return dayRepository.findById(id);}
+    public Optional<Day> getDayById(Long id) {
+        //If dayRepository.findById(id) returns null or wha then ret
+
+
+        return dayRepository.findById(id);
+    }
 
     public void saveDay(Day day) { dayRepository.save(day);}
 
