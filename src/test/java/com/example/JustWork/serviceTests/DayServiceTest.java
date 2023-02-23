@@ -47,7 +47,7 @@ public class DayServiceTest {
 
         try {
             if (isDayGood(foundDay.get())) {
-                Assertions.assertEquals(foundDay, Optional.of(sampleDay2), "foundDay equals sampleDay2 ");
+                Assertions.assertEquals(foundDay, Optional.of(sampleDay2), "Assert that the foundDay equals sampleDay2 and not sampleDay1 or sampleDay3");
             } else {
                 throw new Exception("Bad Day");
             }
@@ -64,14 +64,14 @@ public class DayServiceTest {
         Mockito.when(dayRepository.findById(2L)).thenReturn(null);
         Optional<Day> foundDay = dayService.getDayById(2L);
 
-        Assertions.assertNull(foundDay, "Assert that foundDay does equal Null");
+        Assertions.assertNull(foundDay, "Assert that foundDay does equal Null when that day does not exist");
     }
 
     @Test
     public void shouldNotGetDayWhenNegativeNumberIsPassed() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             dayService.getDayById(-1L);
-        });
+        }, "Assert that a IllegalArgumentException is thrown when calling getDayById(-1L) (negative number case)");
     }
 
 
@@ -79,7 +79,7 @@ public class DayServiceTest {
     public void shouldNotGetDayByIdWhenPassedNull() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             dayService.getDayById(null);
-        });
+        }, "Assert that a IllegalArgumentException is thrown when calling getDayById(null) (null case)");
     }
 
     @Test
