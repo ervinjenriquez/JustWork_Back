@@ -20,14 +20,16 @@ public class DayService {
     //if id(1) return correct day
     //if id(2) return 404 (id 2 doesn't exist)
     //if id(null) return 400
+    //null, negative #, positive #, 0, & found/notFound
     public Optional<Day> getDayById(Long id) {
-        if (id != null) { //If valid input
-            return dayRepository.findById(id);
-        } else { //If not valid input
+        if (id == null || id <= 0) { //If valid input
             throw new IllegalArgumentException();
+        } else { //If not valid input
+            return dayRepository.findById(id);
         }
     }
 
+    //Rename to addDay
     public void saveDay(Day day) { dayRepository.save(day);}
 
     public void deleteDay(Long id) { dayRepository.deleteById(id);}

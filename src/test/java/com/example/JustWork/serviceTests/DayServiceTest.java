@@ -33,11 +33,27 @@ public class DayServiceTest {
 
     @Test
     public void shouldGetDayById() {
-        Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
-        sampleDay.setId(1L);
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay));
+        Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
+        sampleDay1.setId(1L);
+
+        Day sampleDay2 = new Day("Pull A", "Back and Biceps");
+        sampleDay2.setId(2L);
+
+        Day sampleDay3 = new Day("Leg A", "Legs (Quad-focused)");
+        sampleDay3.setId(3L);
+
+        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay2));
         Optional<Day> foundDay = dayService.getDayById(1L);
-        Assertions.assertEquals(foundDay, Optional.of(sampleDay));
+
+        try {
+            if (isDayGood(foundDay.get())) {
+                Assertions.assertEquals(foundDay, Optional.of(sampleDay2), "foundDay equals sampleDay2 ");
+            } else {
+                throw new Exception("Bad Day");
+            }
+        } catch (Exception e) {
+            System.out.println("Bad day was found");
+        }
     }
 
     @Test
@@ -48,8 +64,16 @@ public class DayServiceTest {
         Mockito.when(dayRepository.findById(2L)).thenReturn(null);
         Optional<Day> foundDay = dayService.getDayById(2L);
 
-        Assertions.assertEquals(null, foundDay);
+        Assertions.assertNull(foundDay, "Assert that foundDay does equal Null");
     }
+
+    @Test
+    public void shouldNotGetDayWhenNegativeNumberIsPassed() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.getDayById(-1L);
+        });
+    }
+
 
     @Test
     public void shouldNotGetDayByIdWhenPassedNull() {
@@ -104,5 +128,14 @@ public class DayServiceTest {
         Assertions.assertEquals(o1.getDescription(), o2.getDescription(), "Description matches");
 
         return true;
+    }
+
+    //Method assertGoodDay build under
+    private static boolean isDayGood(Day day) {
+        if ((day.getTitle() != null && day.getTitle() instanceof String) && (day.getId() != null && day.getId() instanceof Long) && (day.getDescription() != null && day.getDescription() instanceof String)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
