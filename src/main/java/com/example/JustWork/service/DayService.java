@@ -17,10 +17,7 @@ public class DayService {
 
     public List<Day> getDays() { return dayRepository.findAll();}
 
-    //if id(1) return correct day
-    //if id(2) return 404 (id 2 doesn't exist)
-    //if id(null) return 400
-    //null, negative #, positive #, 0, & found/notFound
+    // All possible inputs: null, negative/positive #, 0
     public Optional<Day> getDayById(Long id) {
         if (id == null || id <= 0) { //If valid input
             throw new IllegalArgumentException();
@@ -29,7 +26,6 @@ public class DayService {
         }
     }
 
-    //Rename to addDay
     public void saveDay(Day day) { dayRepository.save(day);}
 
     public void deleteDay(Long id) { dayRepository.deleteById(id);}

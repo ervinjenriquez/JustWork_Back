@@ -10,12 +10,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
+
+@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 public class DayServiceTest {
 
@@ -42,17 +45,14 @@ public class DayServiceTest {
         Day sampleDay3 = new Day("Leg A", "Legs (Quad-focused)");
         sampleDay3.setId(3L);
 
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay2));
-        Optional<Day> foundDay = dayService.getDayById(1L);
+        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
+        Mockito.when(dayRepository.findById(2L)).thenReturn(Optional.of(sampleDay2));
+        Mockito.when(dayRepository.findById(3L)).thenReturn(Optional.of(sampleDay3));
 
-        try {
-            if (isDayGood(foundDay.get())) {
-                Assertions.assertEquals(foundDay, Optional.of(sampleDay2), "Assert that the foundDay equals sampleDay2 and not sampleDay1 or sampleDay3");
-            } else {
-                throw new Exception("Bad Day");
-            }
-        } catch (Exception e) {
-            System.out.println("Bad day was found");
+        Optional<Day> foundDay = dayService.getDayById(2L);
+
+        if (assertDayGood(foundDay.get())) {
+            Assertions.assertEquals(foundDay.get().getId(), Optional.of(sampleDay2).get().getId(), "Assert that the foundDay equals sampleDay2 and not sampleDay1 or sampleDay3");
         }
     }
 
@@ -65,6 +65,7 @@ public class DayServiceTest {
         Optional<Day> foundDay = dayService.getDayById(2L);
 
         Assertions.assertNull(foundDay, "Assert that foundDay does equal Null when that day does not exist");
+
     }
 
     @Test
@@ -115,23 +116,14 @@ public class DayServiceTest {
     }
 
 
-    //private assertDayEquals
-    //build my own
-
-    //Start with discussion about arch tiers and why they are important
-    //Service tier, middle tier
-
-    //Build this out later
-    private boolean assertDayEquals(Day o1, Day o2) {
-
+    private static boolean assertDayEquals(Day o1, Day o2) {
         Assertions.assertEquals(o1.getTitle(), o2.getTitle(), "Title matches");
         Assertions.assertEquals(o1.getDescription(), o2.getDescription(), "Description matches");
 
         return true;
     }
 
-    //Method assertGoodDay build under
-    private static boolean isDayGood(Day day) {
+    private static boolean assertDayGood(Day day) {
         if ((day.getTitle() != null && day.getTitle() instanceof String) && (day.getId() != null && day.getId() instanceof Long) && (day.getDescription() != null && day.getDescription() instanceof String)) {
             return true;
         } else {
