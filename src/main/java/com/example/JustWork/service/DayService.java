@@ -18,6 +18,8 @@ public class DayService {
     public List<Day> getDays() { return dayRepository.findAll();}
 
     // All possible inputs: null, negative/positive #, 0
+    // Invalid inputs => throw IllegalArgumentException
+    // Valid inputs => found/notFound
     public Optional<Day> getDayById(Long id) {
         if (id == null || id <= 0) { //If valid input
             throw new IllegalArgumentException();
