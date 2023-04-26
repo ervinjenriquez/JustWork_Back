@@ -28,7 +28,7 @@ public class DayService {
         }
     }
 
-    public void saveDay(Day day) { dayRepository.save(day);}
+    public void addDay(Day day) { dayRepository.save(day);}
 
     public void deleteDay(Long id) { dayRepository.deleteById(id);}
 
@@ -51,7 +51,7 @@ public class DayService {
             retrievedDay.setExercises(day.getExercises());
         }
 
-        saveDay(retrievedDay);
+        addDay(retrievedDay);
         return Boolean.TRUE;
     }
 }

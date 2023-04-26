@@ -93,9 +93,9 @@ public class DayServiceTest {
     }
 
     @Test
-    public void shouldSaveDay() {
+    public void shouldAddDay() {
         Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
-        dayService.saveDay(sampleDay);
+        dayService.addDay(sampleDay);
         Mockito.verify(dayRepository).save(sampleDay);
     }
 

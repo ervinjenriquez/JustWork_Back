@@ -39,7 +39,7 @@ public class DayController {
     @PostMapping("/days")
     @Transactional
     public ResponseEntity<Day> addDay(@RequestBody Day day) {
-        dayService.saveDay(day);
+        dayService.addDay(day);
         return new ResponseEntity<Day>(day, HttpStatus.CREATED);
     }
 
