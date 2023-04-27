@@ -99,6 +99,23 @@ public class DayServiceTest {
         Mockito.verify(dayRepository).save(sampleDay);
     }
 
+    // //Incorrect object test
+    // public void shouldNotAddDayWhenInvalidObject() {
+    //     Assertions.assertThrows(IllegalArgumentException.class, () -> {
+    //         int wrongObject = 5;
+    //         Object ranndom1;
+    //         dayService.addDay(ranndom1);
+    //     }, "Assert that a IllegalArgumentException is thrown when calling getDayById(0L) (0 case)");
+    // }
+
+    //Null test
+    @Test
+    public void shouldNotAddDayWhenPassedNull() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.addDay(null);
+        }, "Assert that a IllegalArgumentException is thrown when calling addDay(null) (null case)");
+    }
+
     @Test
     public void shouldDeleteDay() {
         dayService.deleteDay(1L);
