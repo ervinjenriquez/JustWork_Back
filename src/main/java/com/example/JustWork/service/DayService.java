@@ -28,10 +28,16 @@ public class DayService {
         }
     }
 
-    // All possible inputs: [Day object, wrong object, null]
+    // All possible inputs: [Day object, null]
     // Invalid inputs => throw IllegalArgumentException
     // Valid inputs => add Day
-    public void addDay(Day day) { dayRepository.save(day);}
+    public void addDay(Day day) { 
+        if (day == null) {
+            throw new IllegalArgumentException("Oops, can't save a null day.", null);
+        } else {
+            dayRepository.save(day);
+        }
+    }
 
     public void deleteDay(Long id) { dayRepository.deleteById(id);}
 
