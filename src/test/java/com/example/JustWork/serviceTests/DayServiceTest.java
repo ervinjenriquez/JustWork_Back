@@ -99,16 +99,6 @@ public class DayServiceTest {
         Mockito.verify(dayRepository).save(sampleDay);
     }
 
-    // //Incorrect object test
-    // public void shouldNotAddDayWhenInvalidObject() {
-    //     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-    //         int wrongObject = 5;
-    //         Object ranndom1;
-    //         dayService.addDay(ranndom1);
-    //     }, "Assert that a IllegalArgumentException is thrown when calling getDayById(0L) (0 case)");
-    // }
-
-    //Null test
     @Test
     public void shouldNotAddDayWhenPassedNull() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -117,9 +107,41 @@ public class DayServiceTest {
     }
 
     @Test
-    public void shouldDeleteDay() {
+    public void shouldDeleteDayIfFound() {
+        Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
+        sampleDay1.setId(1L);
+
         dayService.deleteDay(1L);
         Mockito.verify(dayRepository).deleteById(1L);
+    }
+
+    @Test
+    public void shouldNotDeleteDayIfNotFound() {
+        Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
+        sampleDay1.setId(1L);
+
+        Mockito.verify(dayRepository).deleteById(2L);
+    }
+
+    @Test
+    public void shouldNotDeleteDayWhenPassedZero() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.deleteDay(0L);
+        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(0) (0 case)");
+    }
+
+    @Test
+    public void shouldNotDeleteDayWhenPassedNegativeNumber() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.deleteDay(-1L);
+        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(-1L) (negative number case)");        
+    }
+
+    @Test
+    public void shouldNotDeleteDayWhenPassedNull() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            dayService.deleteDay(null);
+        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(null) (null case)");        
     }
 
     @Test

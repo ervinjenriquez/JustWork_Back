@@ -39,6 +39,9 @@ public class DayService {
         }
     }
 
+    // All possible inputs: null, negative/positive #, 0
+    // Invalid inputs => throw IllegalArgumentException
+    // Valid inputs => found/notFound
     public void deleteDay(Long id) { dayRepository.deleteById(id);}
 
     public Boolean updateDay(Long id, Day day) {
