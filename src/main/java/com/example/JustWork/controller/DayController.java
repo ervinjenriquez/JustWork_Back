@@ -4,10 +4,12 @@ import com.example.JustWork.entity.Day;
 import com.example.JustWork.entity.Set;
 import com.example.JustWork.service.DayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -44,8 +46,15 @@ public class DayController {
     }
 
     @DeleteMapping("/days/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteDay(@PathVariable("id") Long id) { dayService.deleteDay(id);}
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteDay(@PathVariable("id") Long id) {
+        try {
+            dayService.deleteDay(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_MODIFIED, "Unable to find the Day to delete.", e);
+        }
+    }
 
     @PutMapping("/days/{id}")
     public ResponseEntity<Day> editDay(@PathVariable("id") Long id, @RequestBody Day day) {

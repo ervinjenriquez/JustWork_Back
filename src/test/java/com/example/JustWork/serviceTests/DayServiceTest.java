@@ -3,6 +3,7 @@ package com.example.JustWork.serviceTests;
 import com.example.JustWork.entity.Day;
 import com.example.JustWork.repository.DayRepository;
 import com.example.JustWork.service.DayService;
+import net.bytebuddy.implementation.auxiliary.MethodCallProxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +13,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -51,9 +53,9 @@ public class DayServiceTest {
         Day sampleDay3 = new Day("Leg A", "Legs (Quad-focused)");
         sampleDay3.setId(3L);
 
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
-        Mockito.when(dayRepository.findById(2L)).thenReturn(Optional.of(sampleDay2));
-        Mockito.when(dayRepository.findById(3L)).thenReturn(Optional.of(sampleDay3));
+        when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
+        when(dayRepository.findById(2L)).thenReturn(Optional.of(sampleDay2));
+        when(dayRepository.findById(3L)).thenReturn(Optional.of(sampleDay3));
 
         Optional<Day> foundDay = dayService.getDayById(2L);
 
@@ -69,8 +71,8 @@ public class DayServiceTest {
 
         Optional<Day> emptyDay = empty();
 
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay));
-        Mockito.when(dayRepository.findById(2L)).thenReturn(emptyDay);
+        when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay));
+        when(dayRepository.findById(2L)).thenReturn(emptyDay);
         Optional<Day> foundDay = dayService.getDayById(2L);
 
         Assertions.assertNotNull(foundDay, "Assert that foundDay does not equal Null when that day does not exist");
@@ -122,7 +124,7 @@ public class DayServiceTest {
         Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
         sampleDay1.setId(1L);
 
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
+        when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
 
         dayService.deleteDay(1L);
 
@@ -136,10 +138,10 @@ public class DayServiceTest {
 
         Optional<Day> emptyDay = empty();
 
-        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
-        Mockito.when(dayRepository.findById(2L)).thenReturn(emptyDay);
+        doReturn(Optional.of(sampleDay1)).when(dayRepository).findById(1L);
+        doThrow(EmptyResultDataAccessException.class).when(dayRepository).deleteById(2L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
+        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
             dayService.deleteDay(2L);
         }, "Assert that a NoSuchElementException is thrown when calling deleteDay(2L) (not found case)");
     }
@@ -155,14 +157,14 @@ public class DayServiceTest {
     public void shouldNotDeleteDayWhenPassedNegativeNumber() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             dayService.deleteDay(-1L);
-        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(-1L) (negative number case)");        
+        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(-1L) (negative number case)");
     }
 
     @Test
     public void shouldNotDeleteDayWhenPassedNull() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             dayService.deleteDay(null);
-        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(null) (null case)");        
+        }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(null) (null case)");
     }
     //////////////// deleteDay() tests END ////////////////
 
@@ -170,10 +172,9 @@ public class DayServiceTest {
     @Test
     public void shouldUpdateDayIfFound() {
         Day foundDay = new Day("Push A", "Chest-Tri-Shoulders");
-        Day newDay = new Day();
-        newDay.setTitle("Pull A");
-        newDay.setDescription("Back-Biceps");
-        Mockito.when(dayRepository.findById(any(Long.class))).thenReturn(Optional.of(foundDay));
+        Day newDay = new Day("Pull B", "Back-Biceps");
+
+        when(dayRepository.findById(any(Long.class))).thenReturn(Optional.of(foundDay));
         Boolean result = dayService.updateDay(1L, newDay);
 
         Assertions.assertTrue(result);
@@ -181,9 +182,27 @@ public class DayServiceTest {
 
     @Test
     public void shouldReturnFalseIfUpdateDayNotFound() {
-        Mockito.when(dayRepository.findById(any(Long.class))).thenReturn(empty());
+        when(dayRepository.findById(any(Long.class))).thenReturn(empty());
         Boolean result = dayService.updateDay(1L, new Day());
         Assertions.assertFalse(result);
+    }
+
+    @Test
+    public void shouldReturnFalseIfPassedZeroId() {
+        Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
+        Assertions.assertFalse(dayService.updateDay(0L, sampleDay), "Assert that updateDay returns false when provided zero ID.");
+    }
+
+    @Test
+    public void shouldReturnFalseIfPassedNegativeId() {
+        Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
+        Assertions.assertFalse(dayService.updateDay(-1L, sampleDay), "Assert that updateDay returns false when provided negative ID.");
+    }
+
+    @Test
+    public void shouldReturnFalseIfPassedNullId() {
+        Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
+        Assertions.assertFalse(dayService.updateDay(null, sampleDay), "Assert that updateDay returns false when provided null ID.");
     }
     //////////////// updateDay() tests END ////////////////
 

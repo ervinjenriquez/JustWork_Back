@@ -3,6 +3,7 @@ package com.example.JustWork.service;
 import com.example.JustWork.entity.Day;
 import com.example.JustWork.repository.DayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,19 +47,21 @@ public class DayService {
         if (id == null || id <= 0) { //If not valid input
             throw new IllegalArgumentException();
         } else { //If valid input
-            Optional<Day> tempDay = dayRepository.findById(id);
-            if (tempDay.isEmpty()) { // If day is not found
-                throw new NoSuchElementException();
-            } else { // If day is found
-                dayRepository.deleteById(id);
-            }
+            dayRepository.deleteById(id);
         }
     }
 
+    // All possible inputs for id: null, negative/positive #, 0
+    // All possible inputs for Day: day, null
+    // Invalid inputs => ???
+    // Valid inputs => updateDay
     public Boolean updateDay(Long id, Day day) {
-        Optional<Day> foundDay = getDayById(id);
+        if (id == null || id <= 0) { // Invalid inputs
+            return Boolean.FALSE;
+        }
 
-        if(foundDay.isEmpty()) {
+        Optional<Day> foundDay = getDayById(id);
+        if(foundDay.isEmpty()) { // If day trying to update is not found
             return Boolean.FALSE;
         }
 
