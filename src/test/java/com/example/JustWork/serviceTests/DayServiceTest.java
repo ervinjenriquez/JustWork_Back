@@ -13,9 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -28,12 +31,15 @@ public class DayServiceTest {
     @InjectMocks
     private DayService dayService;
 
+    //////////////// getDays() tests START ////////////////
     @Test
     public void shouldGetAllDays() {
         dayService.getDays();
         Mockito.verify(dayRepository).findAll();
     }
+    //////////////// getDays() tests END ////////////////
 
+    //////////////// getDayById() tests START ////////////////
     @Test
     public void shouldGetDayById() {
         Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
@@ -61,13 +67,15 @@ public class DayServiceTest {
         Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
         sampleDay.setId(1L);
 
-        Optional<Day> testDay = Optional.of(sampleDay);
+        Optional<Day> emptyDay = empty();
 
-        Mockito.when(dayRepository.findById(2L)).thenReturn(testDay);
+        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay));
+        Mockito.when(dayRepository.findById(2L)).thenReturn(emptyDay);
         Optional<Day> foundDay = dayService.getDayById(2L);
 
-        Assertions.assertTrue(testDay == foundDay);
         Assertions.assertNotNull(foundDay, "Assert that foundDay does not equal Null when that day does not exist");
+        Assertions.assertNotEquals(foundDay, sampleDay, "Assert that the foundDay and sampleDay are not equal.");
+        Assertions.assertTrue(foundDay.isEmpty(), "Assert that foundDay is empty and not a valid Day.");
     }
 
     @Test
@@ -76,7 +84,6 @@ public class DayServiceTest {
             dayService.getDayById(-1L);
         }, "Assert that a IllegalArgumentException is thrown when calling getDayById(-1L) (negative number case)");
     }
-
 
     @Test
     public void shouldNotGetDayByIdWhenPassedNull() {
@@ -91,7 +98,9 @@ public class DayServiceTest {
             dayService.getDayById(0L);
         }, "Assert that a IllegalArgumentException is thrown when calling getDayById(0L) (0 case)");
     }
+    //////////////// getDayById() tests END ////////////////
 
+    //////////////// addDay() tests START ////////////////
     @Test
     public void shouldAddDay() {
         Day sampleDay = new Day("Push A", "Chest-Tri-Shoulders");
@@ -105,14 +114,19 @@ public class DayServiceTest {
             dayService.addDay(null);
         }, "Assert that a IllegalArgumentException is thrown when calling addDay(null) (null case)");
     }
+    //////////////// addDay() tests END ////////////////
 
+    //////////////// deleteDay() tests START ////////////////
     @Test
     public void shouldDeleteDayIfFound() {
         Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
         sampleDay1.setId(1L);
 
+        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
+
         dayService.deleteDay(1L);
-        Mockito.verify(dayRepository).deleteById(1L);
+
+        Mockito.verify(dayRepository, times(1)).deleteById(1L);
     }
 
     @Test
@@ -120,7 +134,14 @@ public class DayServiceTest {
         Day sampleDay1 = new Day("Push A", "Chest-Tri-Shoulders");
         sampleDay1.setId(1L);
 
-        Mockito.verify(dayRepository).deleteById(2L);
+        Optional<Day> emptyDay = empty();
+
+        Mockito.when(dayRepository.findById(1L)).thenReturn(Optional.of(sampleDay1));
+        Mockito.when(dayRepository.findById(2L)).thenReturn(emptyDay);
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            dayService.deleteDay(2L);
+        }, "Assert that a NoSuchElementException is thrown when calling deleteDay(2L) (not found case)");
     }
 
     @Test
@@ -143,7 +164,9 @@ public class DayServiceTest {
             dayService.deleteDay(null);
         }, "Assert that a IllegalArgumentException is thrown when calling deleteDay(null) (null case)");        
     }
+    //////////////// deleteDay() tests END ////////////////
 
+    //////////////// updateDay() tests START ////////////////
     @Test
     public void shouldUpdateDayIfFound() {
         Day foundDay = new Day("Push A", "Chest-Tri-Shoulders");
@@ -158,12 +181,14 @@ public class DayServiceTest {
 
     @Test
     public void shouldReturnFalseIfUpdateDayNotFound() {
-        Mockito.when(dayRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+        Mockito.when(dayRepository.findById(any(Long.class))).thenReturn(empty());
         Boolean result = dayService.updateDay(1L, new Day());
         Assertions.assertFalse(result);
     }
+    //////////////// updateDay() tests END ////////////////
 
 
+    //////////////// utilities START ////////////////
     private static boolean assertDayEquals(Day o1, Day o2) {
         Assertions.assertEquals(o1.getTitle(), o2.getTitle(), "Title matches");
         Assertions.assertEquals(o1.getDescription(), o2.getDescription(), "Description matches");
@@ -178,4 +203,6 @@ public class DayServiceTest {
             return false;
         }
     }
+    //////////////// utilities END ////////////////
+
 }

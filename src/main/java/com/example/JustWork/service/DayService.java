@@ -1,12 +1,12 @@
 package com.example.JustWork.service;
 
 import com.example.JustWork.entity.Day;
-import com.example.JustWork.entity.Exercise;
 import com.example.JustWork.repository.DayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -42,7 +42,18 @@ public class DayService {
     // All possible inputs: null, negative/positive #, 0
     // Invalid inputs => throw IllegalArgumentException
     // Valid inputs => found/notFound
-    public void deleteDay(Long id) { dayRepository.deleteById(id);}
+    public void deleteDay(Long id) {
+        if (id == null || id <= 0) { //If not valid input
+            throw new IllegalArgumentException();
+        } else { //If valid input
+            Optional<Day> tempDay = dayRepository.findById(id);
+            if (tempDay.isEmpty()) { // If day is not found
+                throw new NoSuchElementException();
+            } else { // If day is found
+                dayRepository.deleteById(id);
+            }
+        }
+    }
 
     public Boolean updateDay(Long id, Day day) {
         Optional<Day> foundDay = getDayById(id);
