@@ -3,11 +3,9 @@ package com.example.JustWork.service;
 import com.example.JustWork.entity.Day;
 import com.example.JustWork.repository.DayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

@@ -3,7 +3,6 @@ package com.example.JustWork.serviceTests;
 import com.example.JustWork.entity.Day;
 import com.example.JustWork.repository.DayRepository;
 import com.example.JustWork.service.DayService;
-import net.bytebuddy.implementation.auxiliary.MethodCallProxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Optional.empty;

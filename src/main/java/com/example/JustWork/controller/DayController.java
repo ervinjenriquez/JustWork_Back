@@ -1,13 +1,11 @@
 package com.example.JustWork.controller;
 
 import com.example.JustWork.entity.Day;
-import com.example.JustWork.entity.Set;
 import com.example.JustWork.service.DayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
